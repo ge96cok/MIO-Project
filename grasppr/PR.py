@@ -1,30 +1,55 @@
+from structure.solution import evaluate
+
 def path_relinking(initial_sol, guiding_sol, approach="greedy"):
     
     # get candidate values that are in guiding solution but not in initial solution
-    candidate_nodes = guiding_sol['sol'].difference(initial_sol['sol'])
+    candidate_set = guiding_sol['sol'].difference(initial_sol['sol'])
+    # convert all to a list
+    candidate_nodes = sorted(candidate_set)
+    guiding_list = sorted(guiding_sol['sol'])
+    initial_list = sorted(initial_sol['sol'])
     # candidate_values = initial_sol.symmetric_difference(guiding_sol)
 
-    if approach=="greedy":
+    """
+    Todo 
+    rename intermediate list as inital_list for less operations
+    rewrite as sets???
+    """
 
-        while len(candidate_nodes) > 0:
+    #if approach=="greedy":
+    # loop over all candidate nodes
+    while len(candidate_nodes) > 1:
+        i = candidate_nodes[0]
+        # add local search here
+        best_list = initial_list
+        """
+        this only works for first time, we do not want to replace already replaced elements
+        compute set difference new?
+        """
+        best_list[0] = i
+        best_sol = evaluate(set(best_list))
+        # loop over all positions/nodes to replace in set
+        for j in len(initial_list):
+            intermediate_list = initial_list
+            intermediate_list[j] = i
+            intermediate_sol = evaluate(set(intermediate_list))
+            if intermediate_sol > best_sol:
+                best_list = intermediate_list
+        # set new inital list 
+        # add local search here later
+        initial_list = best_list
+        candidate_nodes.remove(i)
+    
+    # if only 1 candidate left define set
+    # difference best list and guiding list
+    best_set = set(best_list)
 
-            # loop over all spots in initial solution
-            for i in len(initial_sol['sol']):
-                # set baseline intermediate sol as initial sol with 1st candidate node at first position
-                pr_init_sol = 
-                # loop over all candidate values
-                for j in candidate_nodes:
-                    # exchange node i in initial_sol with node j in candidate nodes
-                    intermediate_sol = initial_sol['sol'][j]
-
-            # pop chosen node from candiate nodes
+    # exchange element with last candidate
 
 
+    return set(best_list)
 
-        return intermediate_sol = best_sol
-
-
-def path_relinking(self, initial_solution, final_solution):
+def path_relinking_google(self, initial_solution, final_solution):
 
         # values that differ between initial and guiding solution
         sym_dif = initial_solution.symmetric_difference(final_solution)
