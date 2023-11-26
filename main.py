@@ -4,10 +4,11 @@ from algorithms import grasp
 import random
 from grasppr import graspmod
 import numpy as np
+import time
 
 def executeInstance(path):
     inst = instance.readInstance(path)
-    sol = grasp.execute(inst, 10, -1)
+    sol = grasp.execute(inst, 110, -1)
     print("\nBEST SOLUTION:")
     solution.printSolution(sol)
 
@@ -59,8 +60,10 @@ if __name__ == '__main__':
                    "instances/MDG-a_20_100_m10.txt",
                    "instances/MDG-a_20_n500_m50.txt",
                    ]
-    path = instancesss[0]
-
+    path = instancesss[1]
+    start_time = time.time()
     #executeInstance(path)
-    trygraspmod(path)
+    #trygraspmod(path)
     #trypr(path)
+    end_time = time.time()
+    print("Time taken to run the code:", end_time - start_time, "seconds")
