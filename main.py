@@ -13,11 +13,16 @@ def executeInstance(path):
 
 def trygraspmod(path):
     inst = instance.readInstance(path)
+    #sol = graspmod.execute_with_learning_alpha(inst, 10, 20)
     sol = graspmod.execute(inst, -1)
+    best = -1
     print("\nINITIAL SOLUTIONS:")
     for i in range(np.size(sol)):
         print(sol[i]['sol'])
         print(sol[i]['of'])
+        if(best < sol[i]['of']):
+            best = sol[i]['of']
+    print("\nBEST SOLUTION = "+ str(best))
 
 def trypr(path):
     inst = instance.readInstance(path)
@@ -55,6 +60,6 @@ if __name__ == '__main__':
                    ]
     path = instancesss[0]
 
-    executeInstance(path)
+    #executeInstance(path)
     #trygraspmod(path)
     #trypr(path)
