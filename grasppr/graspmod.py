@@ -6,7 +6,43 @@ from constructives import cgrasp
 from localsearch import lsbestimp
 import random
 
-#TODO: write graspmod execute method without alpha-parameter with learning-alpha
+def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
+    #TODO: write graspmod execute method without alpha-parameter with learning-alpha
+    initsol = []
+    best = None
+    best_of = -1
+    alphas = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    Ais = []
+    Qis = []
+    Pis = []
+    for i in range(11):
+        Ais.append(set())
+        Qis.append(0)
+        Pis.append(0)
+    for j in range(iniciate_alpha):
+        for i in range(11):
+            sol = cgrasp.construct(inst, alphas[i])
+            lsbestimp.improve(sol)
+            initsol.append(sol)
+            Ais[i].add(sol['of'])
+            if sol['of'] > best_of:
+                best_of = sol['of']
+                best = sol
+    for j in range(learning_alpha):
+        for i in range(len(Qis)):
+            Qis[i] = best_of/sum(Ais[i])/len(Ais[i])
+        for i in range(len(Pis)):
+            Pis[i] = Qis[i]/sum(Qis)
+        alpha = random.choices(alphas, Pis)[0]
+        sol = cgrasp.construct(inst, alpha)
+        lsbestimp.improve(sol)
+        initsol.append(sol)
+        if sol['of'] > best_of:
+            best_of = sol['of']
+            best = sol
+    print("\nALPHA PROPS = "+str(Pis))
+
+    return calcInitSet(initsol, len(initsol), inst, -1, best)
 
 def execute(inst, alpha):
     #create Vector for initial solutions
@@ -14,7 +50,7 @@ def execute(inst, alpha):
     #calculate number of iterations = 10% of n
     n = inst['n']
     #iter = int(n*0.1)
-    iter = 10
+    iter = 75
     best = None
     best_of = -1
     for i in range(iter):
@@ -30,7 +66,9 @@ def execute(inst, alpha):
 
 def calcInitSet(initsol, size, inst, alpha, best_sol):
     #Create new instance of solutions with distances as dictionary in order to use GRASP on it
-    initSet = {'n': size, 'p': size / 2, 'd': []}
+    p = inst['p']
+    n = inst['n']
+    initSet = {'n': size, 'p': int(n*0.05), 'd': []}
     for i in range(size):
         initSet['d'].append([0] * size)
 
