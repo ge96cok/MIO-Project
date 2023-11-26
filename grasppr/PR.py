@@ -5,20 +5,19 @@ def path_relinking(initial_sol, guiding_sol, inst, probLocalSearch=0):
 
     sol = solution.createEmptySolution(inst)
 
-    # remove if initial_sol, guiding_sol are sets already
     initial_set = initial_sol['sol']
     guiding_set = guiding_sol['sol']
 
     # save best from initial and guiding solution
-    initial_of = solution.evaluate(initial_sol)
-    guiding_of = solution.evaluate(guiding_sol)
-    best_of = min(initial_of, guiding_of)
+    #initial_of = solution.evaluate(initial_sol)
+    #guiding_of = solution.evaluate(guiding_sol)
+    initial_of = initial_sol['of']
+    guiding_of = guiding_sol['of']
+    best_of = max(initial_of, guiding_of)
     if best_of == initial_of:
         best_set = initial_set
     else:
         best_set = guiding_set
-
-    intermediate_set = initial_set.copy()
 
     # nodes to enter the initial set
     nodes_enter = guiding_set.difference(initial_set)
@@ -27,57 +26,54 @@ def path_relinking(initial_sol, guiding_sol, inst, probLocalSearch=0):
     # nodes in intermediate set to exchange with a entering node
     nodes_exchange = initial_set.difference(nodes_keep)
 
+    best_pr_of = -1
+    
     # enter all nodes
     while len(nodes_enter) > 0:
-        # force at least one new node to enter 
+        # force at least one new node to enter with -1
         current_of = -1
-        test1 = True
-        test2 = True
+        test1= True
         for i in nodes_enter:
             # build intermediate_set
             intermediate_set = nodes_keep.union(nodes_exchange)
             intermediate_set.add(i)
-            if test1:
-                print(intermediate_set)
-                test1 = False
             # candidates to exchange with entering node
             for j in nodes_exchange:          
                 # check for best node to leave
                 intermediate_set.remove(j)
-                #if current_of < 0:
-                 #   print(intermediate_set)
                 intermediate_of = evaluate(intermediate_set, sol)
-                if  intermediate_of > current_of or current_of < 0:
+                #if test1: print(intermediate_of)
+                if  intermediate_of > current_of:
                     best_enter = i
                     best_leave = j
                     current_of = intermediate_of
-                    current_set = intermediate_set 
+                    #current_set = intermediate_set 
                 # rebuild nodes to exchange for next iter
                 intermediate_set.add(j)
             intermediate_set.remove(i)
-            if test2:
-                print(intermediate_set)
-                test2 = False
-        # remove leaving and entering nodes 
+        # remove leaving and entering nodes      
         nodes_exchange.remove(best_leave)
         nodes_enter.remove(best_enter)
+        nodes_keep.add(best_enter)
         
         # check for best pr set vs best set from initial and global
-        best_pr_set = current_set
-        best_pr_of =  evaluate(best_pr_set, sol)
-        if  best_pr_of > best_of:
+
+        best_pr_set = nodes_keep.union(nodes_exchange)
+        best_pr_of = evaluate(best_pr_set, sol)
+        if best_pr_of > best_of:
             best_of = best_pr_of
             best_set = best_pr_set
-
-        print("Step Solution: ", end="")
-        for s in best_pr_set:
-            print(s, end=" ")
-        print()
-        print("Objective Value: "+str(round(best_pr_of, 2)))      
+     
+        #print("Step Solution: ", end="")
+        #for s in best_pr_set:
+        #    print(s, end=" ")
+        #print()
+        #print("Objective Value: "+str(round(best_pr_of, 2)))      
         
     # add local search here, just with a probability or a counter?
     # if probLocalSearch > 0
 
+    printSolution(best_set, best_of)
     return best_set, best_of
 
 def evaluate(set, sol):
@@ -89,7 +85,7 @@ def evaluate(set, sol):
     return of
 
 def printSolution(set, of):
-    print("Solution: ", end="")
+    print("Best PR solution: ", end="")
     for s in set:
         print(s, end=" ")
     print()
