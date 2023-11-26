@@ -11,16 +11,22 @@ def execute(inst, alpha):
     initsol = []
     #calculate number of iterations = 10% of n
     n = inst['n']
-    iter = int(n*0.1)
+    #iter = int(n*0.1)
+    iter = 10
+    best = None
+    best_of = -1
     for i in range(iter):
         sol = cgrasp.construct(inst, alpha)
         lsbestimp.improve(sol)
         initsol.append(sol)
+        if sol['of'] > best_of:
+            best_of = sol['of']
+            best = sol
 
-    return calcInitSet(initsol, iter, inst, alpha)
+    return calcInitSet(initsol, iter, inst, alpha, best)
 
 
-def calcInitSet(initsol, size, inst, alpha):
+def calcInitSet(initsol, size, inst, alpha, best_sol):
     #Create new instance of solutions with distances as dictionary in order to use GRASP on it
     initSet = {'n': size, 'p': size / 2, 'd': []}
     for i in range(size):
@@ -53,12 +59,25 @@ def calcInitSet(initsol, size, inst, alpha):
     #########use grasp on new instance##########
 
     graspsol = grasp.execute(initSet, size, alpha)
+    worst = None
+    worst_of = 0x3f3f3f
+    best_sol_included = False
+    best_of = best_sol['of']
     if graspsol is None:
         return None
     else:
         #in result we will collect the solutions of initsol that GRASP says we keep
         result = []
-        for i in range(len(graspsol['sol'])):
+        for i in graspsol['sol']:
             result.append(initsol[i])
+            if(initsol[i]['of'] >= best_of):
+                best_sol_included = True
+            if(initsol[i]['of'] < worst_of):
+                worst = initsol[i]
+                worst_of = initsol[i]['of']
+
+    if (not best_sol_included):
+        result.remove(worst)
+        result.append(best_sol)
 
     return result
