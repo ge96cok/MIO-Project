@@ -4,7 +4,7 @@ import random
 from grasppr import graspmod, PR
 import numpy as np
 
-path = "instances/MDG-a_4_100_m10.txt"
+path = "instances/MDG-a_2_n500_m50.txt"
 inst = instance.readInstance(path)
 random.seed(1)
 sol1 = grasp.execute(inst, 1, -1)
@@ -15,6 +15,6 @@ solution.printSolution(sol1)
 print("\nBEST SOLUTION 2:")
 solution.printSolution(sol2)
 
-pr_test, of = PR.path_relinking(sol1, sol2, inst)
+pr_test, of = PR.path_relinking_LS_advanced(sol1, sol2, inst, 10)
 #PR.printSolution(pr_test, of)
 
