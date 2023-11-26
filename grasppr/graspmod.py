@@ -6,8 +6,50 @@ from constructives import cgrasp
 from localsearch import lsbestimp
 import random
 
+def execute_without_alpha(inst, num_rand):
+    #TODO: write graspmod-execute-method without alpha-parameter
+    initsol = []
+    best = None
+    best_of = -1
+    best_average_alpha = -1
+    best_alpha = -1
+    alphas = []
+    Ais = []
+    if num_rand < 1:
+        num_rand = 1
+    for j in range(num_rand):
+        Ais.append(set())
+        alphas.append(random.random())
+        for i in range(20):
+            sol = cgrasp.construct(inst, alphas[j])
+            lsbestimp.improve(sol)
+            initsol.append(sol)
+            Ais[j].add(sol['of'])
+            if sol['of'] > best_of:
+                best_of = sol['of']
+                best = sol
+                best_alpha = alphas[j]
+    #calculate the best average alpha:
+    for i in range(len(Ais)):
+        Ais[i] = np.average(list(Ais[i]))
+        if best_average_alpha < 0 or Ais[best_average_alpha] < Ais[i]:
+            best_average_alpha = i
+    #iterate over alphas near best_average_alpha:
+    for j in range(10):
+        a = alphas[best_average_alpha]-0.03+0.6*random.random()
+        #a = best_alpha-0.03+0.6*random.random()
+        if a <= 1 and a >= 0:
+            sol = cgrasp.construct(inst, a)
+            lsbestimp.improve(sol)
+            initsol.append(sol)
+            if sol['of'] > best_of:
+                best_of = sol['of']
+                best = sol
+    print("\n BEST ALPHA = "+str(best_alpha))
+    print("\n BEST AVERAGE ALPHA = "+str(alphas[best_average_alpha]))
+    return calcInitSet(initsol, len(initsol), inst, -1, best)
+
 def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
-    #TODO: write graspmod execute method without alpha-parameter with learning-alpha
     initsol = []
     best = None
     best_of = -1
