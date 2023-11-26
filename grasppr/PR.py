@@ -9,8 +9,6 @@ def path_relinking(initial_sol, guiding_sol, inst, probLocalSearch=0):
     guiding_set = guiding_sol['sol']
 
     # save best from initial and guiding solution
-    #initial_of = solution.evaluate(initial_sol)
-    #guiding_of = solution.evaluate(guiding_sol)
     initial_of = initial_sol['of']
     guiding_of = guiding_sol['of']
     best_of = max(initial_of, guiding_of)
