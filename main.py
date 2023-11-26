@@ -13,8 +13,8 @@ def executeInstance(path):
 
 def trygraspmod(path):
     inst = instance.readInstance(path)
-    sol = graspmod.execute_with_learning_alpha(inst, 10, 20)
-    #sol = graspmod.execute(inst, -1)
+    #sol = graspmod.execute_with_learning_alpha(inst, 10, 20)
+    sol = graspmod.execute(inst, -1)
     best = -1
     print("\nINITIAL SOLUTIONS:")
     for i in range(np.size(sol)):
@@ -58,8 +58,8 @@ if __name__ == '__main__':
                    "instances/MDG-a_20_100_m10.txt",
                    "instances/MDG-a_20_n500_m50.txt",
                    ]
-    path = instancesss[1]
+    path = instancesss[0]
 
     #executeInstance(path)
-    trygraspmod(path)
+    #trygraspmod(path)
     #trypr(path)
