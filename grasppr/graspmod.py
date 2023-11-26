@@ -6,6 +6,8 @@ from constructives import cgrasp
 from localsearch import lsbestimp
 import random
 
+#TODO: write graspmod execute method without alpha-parameter with learning-alpha
+
 def execute(inst, alpha):
     #create Vector for initial solutions
     initsol = []
