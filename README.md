@@ -36,7 +36,8 @@ and then apply the GRASP method again on this set of solutions.
 That way we can obtain a set of solutions that are in some kind distant from each other.
 We hope to get better results this way, since there are more PR-steps between the obtained solutions.
 
-    -1. Calculating various Solutions
+-1. Calculating various Solutions:
+
     Our first idea was to calculate some Solutions with the given GRASP-algorithm and a pre-calculated alpha and to safe the solutions in an array.
     But the results we obtained did not vary too much from the solution obtained with the original GRASP with random alpha.
     So we wanted to implement a "learning alpha parameter".
@@ -60,7 +61,8 @@ We hope to get better results this way, since there are more PR-steps between th
     the values of their solutions. 
     Every in this process calculated solution can be safed in our array of solutions, since they are calculated anyway.
     
-    -2. Calculating a initial set for PR
+-2. Calculating a initial set for PR:
+
     Now that we have a lot of solutions for our instance, we can use the given GRASP-method on them to obtain a set of sufficiently different solutions.
     Therefore we need to create an instance out of them. Obviously our new nodes are the solutions, but we need to calculate the distance 
     between solutions in a efficient way. We decided to define the distance between two solutions as the sum of the distances between unequal
@@ -68,7 +70,8 @@ We hope to get better results this way, since there are more PR-steps between th
     So now that we have a new instance with nodes and the distances between every node, we can use GRASP on this instance to obtain 
     a set of solutions, that are different enough from each other.
 
-    -Adjustments
+-Adjustments:
+
     (Keeping so far best solution.)
 
 
