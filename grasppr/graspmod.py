@@ -62,7 +62,7 @@ def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
         Qis.append(0)
         Pis.append(0)
     for j in range(iniciate_alpha):
-        for i in range(11):
+        for i in range(11):             #11 = size of alphas
             sol = cgrasp.construct(inst, alphas[i])
             lsbestimp.improve(sol)
             initsol.append(sol)
@@ -87,7 +87,7 @@ def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
     return calcInitSet(initsol, len(initsol), inst, -1, best)
 
 def execute(inst, alpha):
-    #create Vector for initial solutions
+    #create Array for initial solutions
     initsol = []
     #calculate number of iterations = 10% of n
     n = inst['n']

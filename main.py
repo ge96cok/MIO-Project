@@ -63,7 +63,7 @@ if __name__ == '__main__':
     path = instancesss[1]
     start_time = time.time()
     #executeInstance(path)
-    #trygraspmod(path)
+    trygraspmod(path)
     #trypr(path)
     end_time = time.time()
     print("Time taken to run the code:", end_time - start_time, "seconds")
