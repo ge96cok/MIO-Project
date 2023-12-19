@@ -51,10 +51,25 @@ We hope to get better results this way, since there are more PR-steps between th
     there is just a fixed set of alphas. And also the were just minor differences in the probabilities for the alphas,
     which mean, the solutions did not differ a lot.
     We belive that maybe we should use more alphas and more iterations, but since we want a fast algorithm, we thought of another idea. 
-    ...
+    
+    We start again with a discrete set of values for alpha, but this time the number of values in this set is given as an argument in 
+    the function. Also we don't use evenly distributed values, but instead we use random numbers. 
+    We also found out by experimenting with alpha, that there are even important differances between an alpha and an alpha+0.05 so
+    it would only be logical to inspect a small area around a good alpha, to see if we can improve it.
+    That's why we do the same thing again: in a given intervall around our so far best alpha we calculate some random numbers and compare
+    the values of their solutions. 
+    Every in this process calculated solution can be safed in our array of solutions, since they are calculated anyway.
+    
+    -2. Calculating a initial set for PR
+    Now that we have a lot of solutions for our instance, we can use the given GRASP-method on them to obtain a set of sufficiently different solutions.
+    Therefore we need to create an instance out of them. Obviously our new nodes are the solutions, but we need to calculate the distance 
+    between solutions in a efficient way. We decided to define the distance between two solutions as the sum of the distances between unequal
+    nodes of that solutions.
+    So now that we have a new instance with nodes and the distances between every node, we can use GRASP on this instance to obtain 
+    a set of solutions, that are different enough from each other.
 
-Adjustments:
-(Keeping so far best solution.)
+    -Adjustments
+    (Keeping so far best solution.)
 
 
 
