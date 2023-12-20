@@ -127,7 +127,7 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
             finalIndex = len(compare1)
             while index1 < finalIndex:
                 #sum of the distances between every node in compare1&2
-                d += inst['d'][compare1[index1]][compare2[index2]]
+                d += inst['d'][compare1[index1]][compare2[index2]]        ########### maybe we need to put abs() here - are the distances always pos? ################
                 if index2 == len(compare1)-1:
                     index1 += 1
                     index2 = 0
@@ -138,7 +138,7 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
             initSet['d'][j][i] = d
 
 
-    #########use grasp on new instance##########
+    ######### use grasp on new instance ##########
 
     graspsol = grasp.execute(initSet, size, alpha)
     worst = None

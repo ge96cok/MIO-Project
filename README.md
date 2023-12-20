@@ -65,7 +65,7 @@ We hope to get better results this way, since there are more PR-steps between th
 
     Now that we have a lot of solutions for our instance, we can use the given GRASP-method on them to obtain a set of sufficiently different solutions.
     Therefore we need to create an instance out of them. Obviously our new nodes are the solutions, but we need to calculate the distance 
-    between solutions in a efficient way. We decided to define the distance between two solutions as the sum of the distances between unequal
+    between solutions in an efficient way. We decided to define the distance between two solutions as the sum of the distances between unequal
     nodes of that solutions.
     So now that we have a new instance with nodes and the distances between every node, we can use GRASP on this instance to obtain 
     a set of solutions, that are different enough from each other.
@@ -73,6 +73,26 @@ We hope to get better results this way, since there are more PR-steps between th
 -Adjustments:
 
     (Keeping so far best solution.)
+    Since GRASP doesn't doesn't consider the values of the solutions, but just the distances between the solutions, we want to
+    modify the resulting set. Although we want solutions to differ from each other, we also want to keep our so far best solution.
+    So if GRASP chooses a set of solutions, that doesn't contain the best so far, we will remove the worst solutions from the set 
+    and add our best. So we can guarantee, that this aplication of GRASP will not make us lose value in the result.
+
+-Changeable Parameter:
+    
+    We want to point out, that there are plenty of parameters that can be changed.
+    For every random number we use as alpha, we calculate 20 solutions. Obviously we could calculate more or less than that. 
+    
+    --------- (Explain a little more here) ------------------
+    
+    And for the incumbent alpha, we calculate 10 more alphas in an intervall of size 0.6 around it. Why? Well, because! 
+    
+    Another parameter is the size of the initial set. We chose it to be 5% of the size of the instance. 
+    And we are not determining an alpha for the GRASP on our new instance of solutions. (Should we change that? Can we change that?) 
+    
+    Gives space for a parameteranalysis.
+
+Next we want to use PR to improve our solutions.
 
 
 
