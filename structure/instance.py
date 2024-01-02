@@ -4,8 +4,11 @@ def readInstance(path):
     with open(path, "r") as f:
         # First line in file has two numbers: n p
         n, p = f.readline().split()
+        # In 1b we only have n given, p is 0.25*n
+        #n = f.readline()
         n = int(n)
         p = int(p)
+        #p = 0.25*n
         instance['n'] = n
         instance['p'] = p
         instance['d'] = []

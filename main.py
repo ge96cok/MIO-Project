@@ -4,7 +4,10 @@ from algorithms import grasp
 import random
 from grasppr import graspmod
 import numpy as np
-import time
+import pandas as pd
+import datetime
+import os
+import csv
 
 def executeInstance(path):
     inst = instance.readInstance(path)
@@ -41,7 +44,7 @@ def trypr(path):
                 best_solution = best_set
     print("\nBEST SOLUTION = "+str(best))
 
-
+"""
 if __name__ == '__main__':
     random.seed(1)
     instancesss = ["instances/MDG-a_1_100_m10.txt",
@@ -67,3 +70,34 @@ if __name__ == '__main__':
     #trypr(path)
     end_time = time.time()
     print("Time taken to run the code:", end_time - start_time, "seconds")
+"""
+
+# try basic first
+# then run for all versions
+
+def executeDir():
+    dir = "instances"
+    with os.scandir(dir) as files:
+        filesnames = [file.name for file in files]
+    with open("results.csv", "w") as results:
+        results.write("file" + "," + "of" + "," + "runtime (s)" + "\n")
+        for f in filesnames:
+            path = dir+"/"+f
+            print("Solving "+f)
+            inst = instance.readInstance(path)
+            results.write(f + ",")
+            start = datetime.datetime.now()
+            sol = grasp.execute(inst, 10, -1)
+            runtime = datetime.datetime.now() - start
+            runtime = round(runtime.total_seconds(), 2)
+            solution.printSolution(sol)
+            results.write(str(round(sol['of'], 2))+","+str(runtime)+"\n")
+            print("Runtime:" + str(runtime))
+        print("Finished")
+
+if __name__ == '__main__':
+    random.seed(1)
+    executeDir()
+
+    #res = pd.read_csv("results.csv")
+    #print(res) 
