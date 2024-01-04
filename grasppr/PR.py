@@ -25,6 +25,8 @@ def printSolution(set, of, type):
     print("Objective Value: "+str(round(of, 2)))
     print("Type:", type)
 
+
+#TODO: fregLocalSearch wird nicht benutzt.
 def path_relinking(initial_sol, guiding_sol, inst, freqLocalSearch=0):
 
     sol = solution.createEmptySolution(inst)

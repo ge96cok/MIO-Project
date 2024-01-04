@@ -110,7 +110,8 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
     #Create new instance of solutions with distances as dictionary in order to use GRASP on it
     p = inst['p']
     n = inst['n']
-    initSet = {'n': size, 'p': int(n*0.05), 'd': []}
+    #initSet = {'n': size, 'p': int(n*0.05), 'd': []}
+    initSet = {'n': size, 'p': 4, 'd': []}
     for i in range(size):
         initSet['d'].append([0] * size)
 
@@ -140,7 +141,8 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
 
     ######### use grasp on new instance ##########
 
-    graspsol = grasp.execute(initSet, size, alpha)
+    #graspsol = grasp.execute(initSet, size, alpha)
+    graspsol = grasp.execute(initSet, 20, alpha)
     worst = None
     worst_of = 0x3f3f3f
     best_sol_included = False
@@ -161,5 +163,8 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
     if (not best_sol_included):
         result.remove(worst)
         result.append(best_sol)
+
+    for i in range(len(result)):
+        print(result[i]['sol'])
 
     return result
