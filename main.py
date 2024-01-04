@@ -76,7 +76,7 @@ if __name__ == '__main__':
 # then run for all versions
 
 def executeDir():
-    dir = "instances"
+    dir = "instances_1b"
     with os.scandir(dir) as files:
         filesnames = [file.name for file in files]
     with open("results.csv", "w") as results:
@@ -87,7 +87,7 @@ def executeDir():
             inst = instance.readInstance(path)
             results.write(f + ",")
             start = datetime.datetime.now()
-            sol = grasp.execute(inst, 10, -1)
+            sol = grasp.execute(inst, 20, -1)
             runtime = datetime.datetime.now() - start
             runtime = round(runtime.total_seconds(), 2)
             solution.printSolution(sol)
