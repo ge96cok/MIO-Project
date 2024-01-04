@@ -8,6 +8,7 @@ import pandas as pd
 import datetime
 import os
 import csv
+import time
 
 def executeInstance(path):
     inst = instance.readInstance(path)
@@ -18,7 +19,7 @@ def executeInstance(path):
 def trygraspmod(path):
     inst = instance.readInstance(path)
     #sol = graspmod.execute(inst, -1)
-    sol = graspmod.execute_without_alpha(inst, 5)
+    sol = graspmod.execute_without_alpha(inst)
     #sol = graspmod.execute_with_learning_alpha(inst, 10, 20)
     best = -1
 #    print("\nINITIAL SOLUTIONS:")
@@ -89,7 +90,8 @@ def executeDir():
             results.write(f + ",")
             start = datetime.datetime.now()
 
-            sol = graspmod.execute_without_alpha(inst, 5)
+            #sol = graspmod.execute_without_alpha(inst, 5)
+            sol = graspmod.execute_with_learning_alpha(inst, 20, 20)
             best = -1
             best_solution = None
             for i in range(len(sol)):
@@ -117,5 +119,8 @@ if __name__ == '__main__':
     executeDir()
 
 
+
+
+
     #res = pd.read_csv("results.csv")
-    #print(res) 
+    #print(res)

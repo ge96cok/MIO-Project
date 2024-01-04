@@ -6,29 +6,27 @@ from constructives import cgrasp
 from localsearch import lsbestimp
 import random
 
-def execute_without_alpha(inst, num_rand):
+def execute_without_alpha(inst):
     #TODO: write graspmod-execute-method without alpha-parameter
     initsol = []
     best = None
     best_of = -1
     best_average_alpha = -1
-    best_alpha = -1
-    alphas = []
+    alphas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
+    #alphas = [0, 0.06, 0.12, 0.18, 0.24, 0.3, 0.36, 0.42, 0.48, 0.54, 0.6, 0.66, 0.72, 0.78, 0.84, 0.9, 0.95]
     Ais = []
-    if num_rand < 1:
-        num_rand = 1
-    for j in range(num_rand):
+    #for j in range(num_rand):
+    for j in range(len(alphas)):
         Ais.append(set())
-        alphas.append(random.random())
+        #alphas.append(random.random())
         for i in range(20):
             sol = cgrasp.construct(inst, alphas[j])
             lsbestimp.improve(sol)
-            initsol.append(sol)
             Ais[j].add(sol['of'])
             if sol['of'] > best_of:
                 best_of = sol['of']
                 best = sol
-                best_alpha = alphas[j]
+                initsol.append(sol)
     #calculate the best average alpha:
     for i in range(len(Ais)):
         Ais[i] = np.average(list(Ais[i]))
@@ -36,8 +34,9 @@ def execute_without_alpha(inst, num_rand):
             best_average_alpha = i
     #iterate over alphas near best_average_alpha:
     for j in range(10):
-        a = alphas[best_average_alpha]-0.03+0.6*random.random()
-        #a = best_alpha-0.03+0.6*random.random()
+        a = alphas[best_average_alpha]-0.025+0.05*random.random()
+        #a = best_alpha-0.025+0.05*random.random()
+        #a = best_alpha - 0.025 + 0.005 * j
         if a <= 1 and a >= 0:
             sol = cgrasp.construct(inst, a)
             lsbestimp.improve(sol)
@@ -45,31 +44,30 @@ def execute_without_alpha(inst, num_rand):
             if sol['of'] > best_of:
                 best_of = sol['of']
                 best = sol
-    print("\n BEST ALPHA = "+str(best_alpha))
-    print("\n BEST AVERAGE ALPHA = "+str(alphas[best_average_alpha]))
     return calcInitSet(initsol, len(initsol), inst, -1, best)
 
 def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
     initsol = []
     best = None
     best_of = -1
-    alphas = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    #alphas = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    alphas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
     Ais = []
     Qis = []
     Pis = []
-    for i in range(11):
+    for i in range(len(alphas)):
         Ais.append(set())
         Qis.append(0)
         Pis.append(0)
     for j in range(iniciate_alpha):
-        for i in range(11):             #11 = size of alphas
+        for i in range(len(alphas)):
             sol = cgrasp.construct(inst, alphas[i])
             lsbestimp.improve(sol)
-            initsol.append(sol)
             Ais[i].add(sol['of'])
             if sol['of'] > best_of:
                 best_of = sol['of']
                 best = sol
+                initsol.append(sol)
     for j in range(learning_alpha):
         for i in range(len(Qis)):
             Qis[i] = best_of/sum(Ais[i])/len(Ais[i])
@@ -111,7 +109,7 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
     p = inst['p']
     n = inst['n']
     #initSet = {'n': size, 'p': int(n*0.05), 'd': []}
-    initSet = {'n': size, 'p': 4, 'd': []}
+    initSet = {'n': size, 'p': 3, 'd': []}
     for i in range(size):
         initSet['d'].append([0] * size)
 
@@ -142,7 +140,7 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
     ######### use grasp on new instance ##########
 
     #graspsol = grasp.execute(initSet, size, alpha)
-    graspsol = grasp.execute(initSet, 20, alpha)
+    graspsol = grasp.execute(initSet, 10, alpha)
     worst = None
     worst_of = 0x3f3f3f
     best_sol_included = False
@@ -164,7 +162,7 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
         result.remove(worst)
         result.append(best_sol)
 
-    for i in range(len(result)):
-        print(result[i]['sol'])
+    #for i in range(len(result)):
+    #    print(result[i]['sol'])
 
     return result
