@@ -1,4 +1,5 @@
 import grasppr.PR
+import structure2.instance2
 from structure import instance, solution
 from algorithms import grasp
 import random
@@ -81,8 +82,8 @@ def executeDir():
     dir = "instances"
     with os.scandir(dir) as files:
         filesnames = [file.name for file in files]
-    with open("results.csv", "w") as results:
-        results.write("file" + "," + "GRASPMOD_of" + "," + "GRASPMOD_runtime (s)" + "PR1_of" + "," + "PR1_runtime (s)" + "PR2_of" + "," + "PR2_runtime (s)" + "PR3_of" + "," + "PR3_runtime (s)" + "PR4_of" + "," + "PR4_runtime (s)" + "GRASP_of" + "," + "GRASP_runtime (s)" + "\n")
+    with open("results360iters.csv", "w") as results:
+        results.write("file" + "," + "GRASPMOD_of" + "," + "GRASPMOD_runtime (s)" + "," + "PR1_of" + "," + "PR1_runtime (s)" + "," + "PR2_of" + "," + "PR2_runtime (s)" + "," + "PR3_of" + "," + "PR3_runtime (s)" + "," + "PR4_of" + "," + "PR4_runtime (s)" + "," + "GRASP_of" + "," + "GRASP_runtime (s)" + "\n")
         for f in filesnames:
             path = dir+"/"+f
             print("Solving "+f)
@@ -109,13 +110,12 @@ def executeDir():
             results.write(str(round(best, 2)) + "," + str(runtime) + ",")
             print("FINISHED PR1 IN " + str(runtime) + " s")
 
-
             start = datetime.datetime.now()
             best = -1
             for i in range(len(sol)):
                 for j in range(len(sol)):
                     if i != j:
-                        best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, True, 0, False)
+                        best_set, best_of, type = grasppr.PR.path_relinking(sol[i], sol[j], inst, True, 0, False)
                         if (best_of > best):
                             best = best_of
             runtime = datetime.datetime.now() - start
@@ -123,13 +123,12 @@ def executeDir():
             results.write(str(round(best, 2)) + "," + str(runtime) + ",")
             print("FINISHED PR2 IN " + str(runtime) + " s")
 
-
             start = datetime.datetime.now()
             best = -1
             for i in range(len(sol)):
                 for j in range(len(sol)):
                     if i != j:
-                        best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, False, 0.1, False)
+                        best_set, best_of, type = grasppr.PR.path_relinking(sol[i], sol[j], inst, False, 0.1, False)
                         if (best_of > best):
                             best = best_of
             runtime = datetime.datetime.now() - start
@@ -137,13 +136,12 @@ def executeDir():
             results.write(str(round(best, 2)) + "," + str(runtime) + ",")
             print("FINISHED PR3 IN " + str(runtime) + " s")
 
-
             start = datetime.datetime.now()
             best = -1
             for i in range(len(sol)):
                 for j in range(len(sol)):
                     if i != j:
-                        best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, False, 0.1, True)
+                        best_set, best_of, type = grasppr.PR.path_relinking(sol[i], sol[j], inst, False, 0.1, True)
                         if (best_of > best):
                             best = best_of
             runtime = datetime.datetime.now() - start
@@ -153,6 +151,36 @@ def executeDir():
 
             start = datetime.datetime.now()
             sol = grasp.execute(inst, 360, -1)
+            results.write(str(round(sol['of'], 2)) + "," + str(runtime) + "\n")
+            runtime = datetime.datetime.now() - start
+            runtime = round(runtime.total_seconds(), 2)
+            print("FINISHED GRASP IN " + str(runtime) + " s")
+
+        print("Finished")
+
+
+
+def executeDir2():
+    dir = "instances_1b"
+    with os.scandir(dir) as files:
+        filesnames = [file.name for file in files]
+    with open("results60itersBIG.csv", "w") as results:
+        results.write("file" + "," + "GRASPMOD_of" + "," + "GRASPMOD_runtime (s)" + "," + "GRASP_of" + "," + "GRASP_runtime (s)" + "\n")
+        for f in filesnames:
+            path = dir+"/"+f
+            print("Solving "+f)
+            inst = structure2.instance2.readInstance2(path)
+            results.write(f + ",")
+
+            start = datetime.datetime.now()
+            best_of = graspmod.execute_with_learning_alpha(inst, 2, 20)
+            runtime = datetime.datetime.now() - start
+            runtime = round(runtime.total_seconds(), 2)
+            results.write(str(round(best_of, 2)) + "," + str(runtime) + ",")
+            print("FINISHED GRASPMOD IN " + str(runtime) + " s")
+
+            start = datetime.datetime.now()
+            sol = grasp.execute(inst, 60, -1)
             results.write(str(round(sol['of'], 2)) + "," + str(runtime) + "\n")
             runtime = datetime.datetime.now() - start
             runtime = round(runtime.total_seconds(), 2)
