@@ -71,7 +71,8 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
     nodes_check = set()
     stepsLS = int(freqLS*len(nodes_enter))
     # counter to stop LS in case of edge cases
-    maxLS = 1/freqLS
+    if freqLS>0:
+        maxLS = int(1/freqLS)
     counterLS = 0
     
     while len(nodes_enter) > 0:
