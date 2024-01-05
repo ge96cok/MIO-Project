@@ -44,7 +44,7 @@ def execute_without_alpha(inst):
             if sol['of'] > best_of:
                 best_of = sol['of']
                 best = sol
-    return calcInitSet(initsol, len(initsol), inst, -1, best)
+    return calcInitSet(initsol, len(initsol), inst, -1, best), best
 
 def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
     initsol = []
@@ -83,7 +83,7 @@ def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
             best = sol
     print("\nALPHA PROPS = "+str(Pis))
 
-    return calcInitSet(initsol, len(initsol), inst, -1, best)
+    return calcInitSet(initsol, len(initsol), inst, -1, best), best_of
 
 def execute(inst, alpha):
     #create Array for initial solutions
