@@ -38,6 +38,77 @@ simple=False, freqLS=0.1, advLS=True
 
 """
 
+def path_relinking_LS_advanced(initial_sol, guiding_sol, inst, freqLS):
+
+    sol = solution.createEmptySolution(inst)
+
+    initial_set = initial_sol['sol']
+    guiding_set = guiding_sol['sol']
+
+    best_of = max(initial_sol['of'], guiding_sol['of'])
+    if best_of == initial_sol['of']:
+        best_set = initial_set
+        type = "initial solution"
+    else:
+        best_set = guiding_set
+        type = "guiding solution"
+
+    nodes_enter = guiding_set.difference(initial_set)
+    nodes_keep = initial_set.intersection(guiding_set)
+    nodes_exchange = initial_set.difference(nodes_keep)
+
+    stepsLS = int(freqLS*len(nodes_enter))
+
+    best_pr_of = -1
+    counter = 1
+    
+    while len(nodes_enter) > 0:
+        current_of = -1
+        for i in nodes_enter:
+            intermediate_set = nodes_keep.union(nodes_exchange)
+            intermediate_set.add(i)
+            for j in nodes_exchange:          
+                intermediate_set.remove(j)
+                intermediate_of = evaluate(intermediate_set, sol)
+                if  intermediate_of > current_of:
+                    best_enter = i
+                    best_leave = j
+                    current_of = intermediate_of 
+                intermediate_set.add(j)
+            intermediate_set.remove(i) 
+        nodes_exchange.remove(best_leave)
+        nodes_enter.remove(best_enter)
+        nodes_keep.add(best_enter)
+        
+        best_pr_set = nodes_keep.union(nodes_exchange)
+        best_pr_of = evaluate(best_pr_set, sol)
+        if best_pr_of > round(best_of,2):
+            best_of = best_pr_of
+            best_set = best_pr_set
+            type = "path relinking"
+        
+        best_ls_sol = createPRSol(best_pr_set, best_pr_of, inst)
+
+        if counter == stepsLS:
+            # perform LS
+            lsbestimp.improve(best_ls_sol)
+            #print("LS -> "+str(round(best_ls_sol['of'], 2)))
+            counter = 1
+            # use LS set as inital set for next PR iteration
+            initial_set = best_ls_sol['sol']
+            nodes_enter = guiding_set.difference(initial_set)
+            nodes_keep = initial_set.intersection(guiding_set)
+            nodes_exchange = initial_set.difference(nodes_keep)
+        else:
+            counter += 1
+        if round(best_ls_sol['of'], 2) > round(best_of,2):
+            best_of = round(best_ls_sol['of'], 2)
+            best_set = best_ls_sol['sol']
+            type = "local search"
+
+    printSolution(best_set, best_of, type)
+    return best_set, best_of, type
+
 def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS=False):
 
     # catch errors
@@ -120,6 +191,11 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
                     nodes_enter = guiding_set.difference(initial_set)
                     nodes_keep = initial_set.intersection(guiding_set)
                     nodes_exchange = initial_set.difference(nodes_keep)
+                    # break if nodes_keep == 0 as local search moved too far from guiding solution
+                    # we can do this since we know that after the first iteration of the while loop 
+                    # there is at least one node to keep
+                    if len(nodes_keep) == 0:
+                        break
             else:
                 counter += 1
             #print(counter)
