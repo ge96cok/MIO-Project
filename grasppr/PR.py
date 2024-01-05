@@ -70,6 +70,9 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
     counter = 1
     nodes_check = set()
     stepsLS = int(freqLS*len(nodes_enter))
+    # counter to stop LS in case of edge cases
+    maxLS = 1/freqLS
+    counterLS = 0
     
     while len(nodes_enter) > 0:
         # force at least one new node to enter with -1
@@ -116,18 +119,22 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
                 #print("LS -> "+str(round(best_ls_sol['of'], 2)))
                 counter = 1
                 if advLS==True and freqLS > 0:
+                    # break if we run into edge cases
+                    if counterLS >= maxLS:
+                        break
+                    else:
+                        counterLS += 1
                     # use LS set as inital set for next PR iteration
                     initial_set = best_ls_sol['sol']
                     nodes_enter = guiding_set.difference(initial_set)
                     nodes_keep = initial_set.intersection(guiding_set)
+                    # break if nodes_keep stays the same over two loops as LS moved too far from guiding solution
+                    # we can do this since we know that after the first iteration of the while loop 
+                    # there is at least one node to keep
                     if nodes_keep == nodes_check:
                         break
                     nodes_check = nodes_keep.copy()
                     nodes_exchange = initial_set.difference(nodes_keep)
-                    # break if nodes_keep stays the same over two loops 
-                    # as local search moved too far from guiding solution
-                    # we can do this since we know that after the first iteration of the while loop 
-                    # there is at least one node to keep
             else:
                 counter += 1
             if round(best_ls_sol['of'], 2) > round(best_of,2):
