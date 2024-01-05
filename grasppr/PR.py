@@ -129,9 +129,10 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
                     initial_set = best_ls_sol['sol']
                     nodes_enter = guiding_set.difference(initial_set)
                     nodes_keep = initial_set.intersection(guiding_set)
-                    # break if nodes_keep stays the same over two loops as LS moved too far from guiding solution
+                    # break if initial set stays the same over two loops as LS moved too far from guiding solution
                     # we can do this since we know that after the first iteration of the while loop 
                     # there is at least one node to keep
+                    # of course we could also check other sets than nodes_keep
                     if nodes_keep == nodes_check:
                         break
                     nodes_check = nodes_keep.copy()
