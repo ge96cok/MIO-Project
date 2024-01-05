@@ -82,36 +82,82 @@ def executeDir():
     with os.scandir(dir) as files:
         filesnames = [file.name for file in files]
     with open("results.csv", "w") as results:
-        results.write("file" + "," + "of" + "," + "runtime (s)" + "\n")
+        results.write("file" + "," + "GRASPMOD_of" + "," + "GRASPMOD_runtime (s)" + "PR1_of" + "," + "PR1_runtime (s)" + "PR2_of" + "," + "PR2_runtime (s)" + "PR3_of" + "," + "PR3_runtime (s)" + "PR4_of" + "," + "PR4_runtime (s)" + "GRASP_of" + "," + "GRASP_runtime (s)" + "\n")
         for f in filesnames:
             path = dir+"/"+f
             print("Solving "+f)
             inst = instance.readInstance(path)
             results.write(f + ",")
-            start = datetime.datetime.now()
 
-            #sol = graspmod.execute_without_alpha(inst, 5)
-            sol = graspmod.execute_with_learning_alpha(inst, 20, 20)
+            start = datetime.datetime.now()
+            sol, best_of = graspmod.execute_with_learning_alpha(inst, 17, 20)
+            runtime = datetime.datetime.now() - start
+            runtime = round(runtime.total_seconds(), 2)
+            results.write(str(round(best_of, 2)) + "," + str(runtime) + ",")
+            print("FINISHED GRASPMOD IN " + str(runtime) + " s")
+
+            start = datetime.datetime.now()
             best = -1
-            best_solution = None
             for i in range(len(sol)):
                 for j in range(len(sol)):
                     if i != j:
-                        print("INIT_SOL: " + str(sol[i]['of']))
-                        print("GUIDING_SOL: " + str(sol[j]['of']))
-                        best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, 0.2)
+                        best_set, best_of, type = grasppr.PR.path_relinking(sol[i], sol[j], inst, simple=False, freqLS=0, advLS=False)
                         if (best_of > best):
                             best = best_of
-                            best_solution = best_set
-            print("\nBEST SOLUTION = " + str(best))
-            #sol = grasp.execute(inst, 220, -1)
-
             runtime = datetime.datetime.now() - start
             runtime = round(runtime.total_seconds(), 2)
-            #solution.printSolution(sol)
-            #results.write(str(round(sol['of'], 2))+","+str(runtime)+"\n")
-            results.write(str(round(best, 2)) + "," + str(runtime) + "\n")
-            print("Runtime:" + str(runtime))
+            results.write(str(round(best, 2)) + "," + str(runtime) + ",")
+            print("FINISHED PR1 IN " + str(runtime) + " s")
+
+
+            start = datetime.datetime.now()
+            best = -1
+            for i in range(len(sol)):
+                for j in range(len(sol)):
+                    if i != j:
+                        best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, True, 0, False)
+                        if (best_of > best):
+                            best = best_of
+            runtime = datetime.datetime.now() - start
+            runtime = round(runtime.total_seconds(), 2)
+            results.write(str(round(best, 2)) + "," + str(runtime) + ",")
+            print("FINISHED PR2 IN " + str(runtime) + " s")
+
+
+            start = datetime.datetime.now()
+            best = -1
+            for i in range(len(sol)):
+                for j in range(len(sol)):
+                    if i != j:
+                        best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, False, 0.1, False)
+                        if (best_of > best):
+                            best = best_of
+            runtime = datetime.datetime.now() - start
+            runtime = round(runtime.total_seconds(), 2)
+            results.write(str(round(best, 2)) + "," + str(runtime) + ",")
+            print("FINISHED PR3 IN " + str(runtime) + " s")
+
+
+            start = datetime.datetime.now()
+            best = -1
+            for i in range(len(sol)):
+                for j in range(len(sol)):
+                    if i != j:
+                        best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, False, 0.1, True)
+                        if (best_of > best):
+                            best = best_of
+            runtime = datetime.datetime.now() - start
+            runtime = round(runtime.total_seconds(), 2)
+            results.write(str(round(best, 2)) + "," + str(runtime) + ",")
+            print("FINISHED PR4 IN " + str(runtime) + " s")
+
+            start = datetime.datetime.now()
+            sol = grasp.execute(inst, 360, -1)
+            results.write(str(round(sol['of'], 2)) + "," + str(runtime) + "\n")
+            runtime = datetime.datetime.now() - start
+            runtime = round(runtime.total_seconds(), 2)
+            print("FINISHED GRASP IN " + str(runtime) + " s")
+
         print("Finished")
 
 if __name__ == '__main__':
