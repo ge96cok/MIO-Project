@@ -8,6 +8,7 @@ import pandas as pd
 import datetime
 import os
 import csv
+import time
 
 def executeInstance(path):
     inst = instance.readInstance(path)
@@ -18,7 +19,7 @@ def executeInstance(path):
 def trygraspmod(path):
     inst = instance.readInstance(path)
     #sol = graspmod.execute(inst, -1)
-    sol = graspmod.execute_without_alpha(inst, 5)
+    sol = graspmod.execute_without_alpha(inst)
     #sol = graspmod.execute_with_learning_alpha(inst, 10, 20)
     best = -1
 #    print("\nINITIAL SOLUTIONS:")
@@ -36,12 +37,13 @@ def trypr(path):
     best_solution = None
     for i in range(len(sol)):
         for j in range(len(sol)):
-            print("INIT_SOL: "+str(sol[i]['of']))
-            print("GUIDING_SOL: "+str(sol[j]['of']))
-            best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, 0.2)
-            if(best_of > best):
-                best = best_of
-                best_solution = best_set
+            if i != j:
+                print("INIT_SOL: "+str(sol[i]['of']))
+                print("GUIDING_SOL: "+str(sol[j]['of']))
+                best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, 0.2)
+                if(best_of > best):
+                    best = best_of
+                    best_solution = best_set
     print("\nBEST SOLUTION = "+str(best))
 
 """
@@ -76,7 +78,7 @@ if __name__ == '__main__':
 # then run for all versions
 
 def executeDir():
-    dir = "instances_1b"
+    dir = "instances"
     with os.scandir(dir) as files:
         filesnames = [file.name for file in files]
     with open("results.csv", "w") as results:
@@ -87,11 +89,28 @@ def executeDir():
             inst = instance.readInstance(path)
             results.write(f + ",")
             start = datetime.datetime.now()
-            sol = grasp.execute(inst, 20, -1)
+
+            #sol = graspmod.execute_without_alpha(inst, 5)
+            sol = graspmod.execute_with_learning_alpha(inst, 20, 20)
+            best = -1
+            best_solution = None
+            for i in range(len(sol)):
+                for j in range(len(sol)):
+                    if i != j:
+                        print("INIT_SOL: " + str(sol[i]['of']))
+                        print("GUIDING_SOL: " + str(sol[j]['of']))
+                        best_set, best_of = grasppr.PR.path_relinking(sol[i], sol[j], inst, 0.2)
+                        if (best_of > best):
+                            best = best_of
+                            best_solution = best_set
+            print("\nBEST SOLUTION = " + str(best))
+            #sol = grasp.execute(inst, 220, -1)
+
             runtime = datetime.datetime.now() - start
             runtime = round(runtime.total_seconds(), 2)
-            solution.printSolution(sol)
-            results.write(str(round(sol['of'], 2))+","+str(runtime)+"\n")
+            #solution.printSolution(sol)
+            #results.write(str(round(sol['of'], 2))+","+str(runtime)+"\n")
+            results.write(str(round(best, 2)) + "," + str(runtime) + "\n")
             print("Runtime:" + str(runtime))
         print("Finished")
 
@@ -99,5 +118,9 @@ if __name__ == '__main__':
     random.seed(1)
     executeDir()
 
+
+
+
+
     #res = pd.read_csv("results.csv")
-    #print(res) 
+    #print(res)

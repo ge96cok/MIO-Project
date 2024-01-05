@@ -3,7 +3,7 @@ import numpy as np
 
 df = pd.read_csv("results.csv")
 
-#df["Best of"] = df.max(axis = 1)
+#df["Best of"] = df.max(axis=1)
 
 # repeat for all algs we compare
 
