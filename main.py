@@ -104,7 +104,7 @@ def executeDir():
                             best = best_of
                             best_solution = best_set
             print("\nBEST SOLUTION = " + str(best))
-            #sol = grasp.execute(inst, 10, -1)
+            #sol = grasp.execute(inst, 220, -1)
 
             runtime = datetime.datetime.now() - start
             runtime = round(runtime.total_seconds(), 2)
