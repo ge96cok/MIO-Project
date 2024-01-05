@@ -68,7 +68,6 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
     best_pr_of = -1
     # set a counter for LS and calculate steps for LS from freqLS
     counter = 1
-    counterLS = 0
     nodes_check = set()
     stepsLS = int(freqLS*len(nodes_enter))
     
@@ -118,24 +117,19 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
                 counter = 1
                 if advLS==True and freqLS > 0:
                     # use LS set as inital set for next PR iteration
-                    #counterLS += 1
                     initial_set = best_ls_sol['sol']
                     nodes_enter = guiding_set.difference(initial_set)
-                    #print(nodes_enter)
                     nodes_keep = initial_set.intersection(guiding_set)
                     if nodes_keep == nodes_check:
-                        print("break")
                         break
                     nodes_check = nodes_keep.copy()
                     nodes_exchange = initial_set.difference(nodes_keep)
-                    #print(nodes_exchange)
                     # break if nodes_keep stays the same over two loops 
                     # as local search moved too far from guiding solution
                     # we can do this since we know that after the first iteration of the while loop 
                     # there is at least one node to keep
             else:
                 counter += 1
-            #print(counter)
             if round(best_ls_sol['of'], 2) > round(best_of,2):
                 best_of = round(best_ls_sol['of'], 2)
                 best_set = best_ls_sol['sol']
