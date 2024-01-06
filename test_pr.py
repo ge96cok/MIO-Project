@@ -9,26 +9,6 @@ import datetime
 import os
 import csv
 
-def executeInstance(path):
-    inst = instance.readInstance(path)
-    sol = grasp.execute(inst, 110, -1)
-    print("\nBEST SOLUTION:")
-    solution.printSolution(sol)
-
-def trygraspmod(path):
-    inst = instance.readInstance(path)
-    #sol = graspmod.execute(inst, -1)
-    sol = graspmod.execute_without_alpha(inst, 5)
-    #sol = graspmod.execute_with_learning_alpha(inst, 10, 20)
-    best = -1
-#    print("\nINITIAL SOLUTIONS:")
-    for i in range(np.size(sol)):
-#        print(sol[i]['sol'])
-#        print(sol[i]['of'])
-        if(best < sol[i]['of']):
-            best = sol[i]['of']
-    print("\nBEST SOLUTION = "+ str(best))
-
 """
 def trypr(path):
     inst = instance.readInstance(path)
@@ -71,8 +51,6 @@ def trypr(path):
                             best = best_of
                             best_solution = best_set
             print("\nBEST SOLUTION = "+str(best))
-
-
 
 if __name__ == '__testpr__':
     trypr("instances/MDG-a_2_n500_m50.txt")

@@ -80,6 +80,7 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
         current_of = -1
         if simple==True:
             i = nodes_enter.pop()
+            nodes_enter_copy = nodes_enter.copy()
             nodes_enter = [i]
         for i in nodes_enter:
             # build intermediate_set
@@ -97,7 +98,9 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
                 # rebuild nodes to exchange for next iter
                 intermediate_set.add(j)
             intermediate_set.remove(i)
-        # remove leaving and entering nodes      
+        # remove leaving and entering nodes  
+        if simple==True:
+            nodes_enter = nodes_enter_copy.copy()
         nodes_exchange.remove(best_leave)
         nodes_enter.remove(best_enter)
         nodes_keep.add(best_enter)
@@ -117,7 +120,6 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
             if counter == stepsLS:
                 # perform LS
                 lsbestimp.improve(best_ls_sol)
-                #print("LS -> "+str(round(best_ls_sol['of'], 2)))
                 counter = 1
                 if advLS==True and freqLS > 0:
                     # break if we run into edge cases
