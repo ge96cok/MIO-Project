@@ -17,7 +17,6 @@ for a in algs:
 
 # split n=100 and n=500
 dfs = np.split(df, [6], axis=0)
-#dfs = np.split(df, [0], axis=0)
 
 for d in dfs:
     of = []
