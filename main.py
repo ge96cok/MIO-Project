@@ -18,7 +18,7 @@ def executeDir():
     dir = "instances"
     with os.scandir(dir) as files:
         filesnames = [file.name for file in files]
-    with open("results25itersAGAIN_PR5.csv", "w") as results:
+    with open("Tables/results25itersAGAIN_PR5.csv", "w") as results:
         results.write("file" + "," + "GRASPMOD_of" + "," + "GRASPMOD_runtime (s)" + "," +"PR5_of" + "," + "PR5_runtime (s)" + "\n")
         for f in filesnames:
             path = dir+"/"+f
@@ -54,7 +54,7 @@ def executeDir2():
     dir = "instances_1b"
     with os.scandir(dir) as files:
         filesnames = [file.name for file in files]
-    with open("results100itersBIG.csv", "w") as results:
+    with open("Tables/results100itersBIG.csv", "w") as results:
         results.write("file" + "," + "GRASPMOD_of" + "," + "GRASPMOD_runtime (s)" + "," + "GRASP_of" + "," + "GRASP_runtime (s)" + "\n")
         for f in filesnames:
             path = dir+"/"+f

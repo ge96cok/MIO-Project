@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv("results25itersAGAIN.csv")
+df = pd.read_csv("Tables/results25itersAGAIN.csv")
 df = df._get_numeric_data()
 df = df.sort_values(by=["GRASPMOD_of"])
 
@@ -43,7 +43,7 @@ freq = [0,0.05,0.1,0.2,0.3]
 of = []
 runtime = []
 for f in freq:
-    df = pd.read_csv("pr_test500.csv")
+    df = pd.read_csv("Tables/pr_test500.csv")
     df = df[df.freq == str(f)]
     df["of"] = pd.to_numeric(df["of"])
     df["runtime"] = pd.to_numeric(df["runtime"])
