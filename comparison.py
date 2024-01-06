@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv("results02.csv")
+df = pd.read_csv("results300itersAGAIN.csv")
 df = df._get_numeric_data()
 df = df.sort_values(by=["GRASPMOD_of"])
 
@@ -34,10 +34,10 @@ for d in dfs:
     data["of"] = of
     data["run time (s)"] = runtime
     data["dev"] = dev
-    data["# best alg"] = best
+    data["rel best of"] = best
 
-    print(data)
-    #print(data.to_latex(index=True, formatters={"name": str.upper}, float_format="{:.2f}".format))
+    #print(data)
+    print(data.to_latex(index=False, formatters={"name": str.upper}, float_format="{:.2f}".format))
 
 #mean100 = dfs[0].loc['mean'] = dfs[0].mean()
 #mean500 = dfs[1].loc['mean'] = dfs[1].mean()
