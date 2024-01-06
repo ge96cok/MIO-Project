@@ -1,4 +1,4 @@
-file,GRASPMOD_of,GRASPMOD_runtime (s),PR1_of,PR1_runtime (s),PR2_of,PR2_runtime (s),PR3_of,PR3_runtime (s),PR4_of,PR4_runtime (s),PR5_of,PR5_runtime (s)
+file,GRASPMOD_of,GRASPMOD_runtime (s),PR1_of,PR1_runtime (s),PR2_of,PR2_runtime (s),PR3_of,PR3_runtime (s),PR4_of,PR4_runtime (s),PR5_of,PR5_runtime (s),GRASP_of,GRASP_runtime (s)
 MDG-a_10_100_m10.txt,352.72,0.11,352.72,0.02,352.72,0.0,352.72,0.04,352.72,0.01,352.72,0.06,355.5,0.12
 MDG-a_12_100_m10.txt,354.25,0.09,354.25,0.01,354.25,0.0,354.25,0.02,354.25,0.01,354.25,0.01,348.36,0.1
 MDG-a_13_n500_m50.txt,7720.45,6.36,7720.45,34.27,7720.45,0.95,7765.22,38.0,7723.06,18.39,7765.22,5.47,7764.27,7.33
