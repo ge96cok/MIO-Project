@@ -1,14 +1,15 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv("results300itersAGAIN.csv")
+df = pd.read_csv("results300itersAGAIN_PR5.csv")
 df = df._get_numeric_data()
 df = df.sort_values(by=["GRASPMOD_of"])
 
 df["Best of"] = df.max(axis=1)
 
 # repeat for all algs we compare
-algs = ["GRASP", "GRASPMOD", "PR1", "PR2", "PR3", "PR4"]
+#algs = ["GRASP", "GRASPMOD", "PR1", "PR2", "PR3", "PR4"]
+algs = ["GRASPMOD", "PR5"]
 
 for a in algs:
     df["Dev "+a] = (df["Best of"] - df[a+"_of"])/df["Best of"]*100
@@ -30,7 +31,7 @@ for d in dfs:
         dev.append(d["Dev "+a].mean())
         best.append(d["# best "+a].mean())
     data = pd.DataFrame([])
-    data["algorithm"] = ["GRASP", "GRASPMOD", "PR1", "PR2", "PR3", "PR4"]
+    data["algorithm"] = algs
     data["of"] = of
     data["run time (s)"] = runtime
     data["dev"] = dev
