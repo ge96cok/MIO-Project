@@ -2,6 +2,19 @@
 
 Explanations on csv tables used in report tables:
 
+Table 1:
+
+results40iters: comparison of GRASPMOD and GRASP with small instances. <br />
+results100iters: comparison of GRASPMOD and GRASP with small instances. <br />
+results500itersSMALL: comparison of GRASPMOD and GRASP with small instances. <br />
+
+Table 2:
+
+results16itersBIG: comparison of GRASPMOD and GRASP with large instances. <br />
+results32itersBIG: comparison of GRASPMOD and GRASP with large instances. <br />
+results53itersBIG: comparison of GRASPMOD and GRASP with large instances. <br />
+results100itersBIG: comparison of GRASPMOD and GRASP with large instances. <br />
+
 Table 3: 
 
 pr_test500: comparison of different freq parameters for PR with a single 500 instance <br />
@@ -31,4 +44,4 @@ results50itersAGAIN_AGAIN: comparison of all algorithms for 50 iterations
 Table 10: 
 
 results25itersAGAIN_PR5: values for PR5 with iterations 25  
-results50itersAGAIN_PR5: values for PR5 with iterations 50  
+results50itersAGAIN_PR5: values for PR5 with iterations 50
