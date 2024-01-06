@@ -79,8 +79,8 @@ def path_relinking(initial_sol, guiding_sol, inst, simple=False, freqLS=0, advLS
         # force at least one new node to enter with -1
         current_of = -1
         if simple==True:
-            i = nodes_enter.pop()
             nodes_enter_copy = nodes_enter.copy()
+            i = nodes_enter.pop()
             nodes_enter = [i]
         for i in nodes_enter:
             # build intermediate_set
