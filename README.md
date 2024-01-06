@@ -39,9 +39,16 @@ results300itersAGAIN: GRASP values for 300 iterations  <br />
 
 Table 9: 
 
-results50itersAGAIN_AGAIN: comparison of all algorithms for 50 iterations  
+results50itersAGAIN_AGAIN: comparison of all algorithms for 50 iterations  <br />
 
 Table 10: 
 
-results25itersAGAIN_PR5: values for PR5 with iterations 25  
-results50itersAGAIN_PR5: values for PR5 with iterations 50
+results25itersAGAIN_PR5: values for PR5 for 25 iterations <br />
+results50itersAGAIN_PR5: values for PR5 for 50 iterations  <br />
+
+Table 11:
+
+results300_Seed_1: values for PR5 for 300 iterations <br />
+results300_Seed_2: values for PR5 for 300 iterations <br />
+results300_Seed_3: values for PR5 for 300 iterations <br />
+
