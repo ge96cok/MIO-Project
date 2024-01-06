@@ -6,20 +6,40 @@ from constructives import cgrasp
 from localsearch import lsbestimp
 import random
 
+
+############################### This was our first attempt for the GRASP algorithm, it just iterates GRASP and keeps the solutions ################
+def execute(inst, alpha):
+    # create Array for initial solutions
+    initsol = []
+
+    ########### this number is changeable
+    iter = 75
+    best = None
+    best_of = -1
+    for i in range(iter):
+        sol = cgrasp.construct(inst, alpha)
+        lsbestimp.improve(sol)
+        initsol.append(sol)
+        if sol['of'] > best_of:
+            best_of = sol['of']
+            best = sol
+
+    return calcInitSet(initsol, iter, inst, alpha, best)
+
+
+############################## This is the second algorithm we tried #################################################
+
 def execute_without_alpha(inst):
-    #TODO: write graspmod-execute-method without alpha-parameter
+    ################ Here we calculate the best average alpha and search for better alphas in an interval around it.
     initsol = []
     best = None
     best_of = -1
     best_average_alpha = -1
     alphas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
-    #alphas = [0, 0.06, 0.12, 0.18, 0.24, 0.3, 0.36, 0.42, 0.48, 0.54, 0.6, 0.66, 0.72, 0.78, 0.84, 0.9, 0.95]
     Ais = []
-    #for j in range(num_rand):
     for j in range(len(alphas)):
         Ais.append(set())
-        #alphas.append(random.random())
-        for i in range(20):
+        for i in range(20):                              ####### 20 is a changeable parameter
             sol = cgrasp.construct(inst, alphas[j])
             lsbestimp.improve(sol)
             Ais[j].add(sol['of'])
@@ -32,11 +52,9 @@ def execute_without_alpha(inst):
         Ais[i] = np.average(list(Ais[i]))
         if best_average_alpha < 0 or Ais[best_average_alpha] < Ais[i]:
             best_average_alpha = i
-    #iterate over alphas near best_average_alpha:
+    #iterate over alphas near best_average_alpha: (10 is a changeable number)
     for j in range(10):
         a = alphas[best_average_alpha]-0.025+0.05*random.random()
-        #a = best_alpha-0.025+0.05*random.random()
-        #a = best_alpha - 0.025 + 0.005 * j
         if a <= 1 and a >= 0:
             sol = cgrasp.construct(inst, a)
             lsbestimp.improve(sol)
@@ -46,13 +64,17 @@ def execute_without_alpha(inst):
                 best = sol
     return calcInitSet(initsol, len(initsol), inst, -1, best), best
 
+
+##################################################           This is the algorithm we ended with        ######################################
 def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
     initsol = []
     best = None
     best_of = -1
+    ###################### The size of the alphas-set used is changeable. (We tried with different sets)
     alphas = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
     #alphas = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]
     #alphas = [0, 0.06, 0.12, 0.18, 0.24, 0.3, 0.36, 0.42, 0.48, 0.54, 0.6, 0.66, 0.72, 0.78, 0.84, 0.9, 0.95]
+
     Ais = []
     Qis = []
     Pis = []
@@ -64,11 +86,11 @@ def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
         for i in range(len(alphas)):
             sol = cgrasp.construct(inst, alphas[i])
             lsbestimp.improve(sol)
-            initsol.append(sol)
             Ais[i].add(sol['of'])
             if sol['of'] > best_of:
                 best_of = sol['of']
                 best = sol
+                initsol.append(sol)
 
     for j in range(learning_alpha):
         for i in range(len(Qis)):
@@ -87,33 +109,14 @@ def execute_with_learning_alpha(inst, iniciate_alpha, learning_alpha):
     #return best_of
     return calcInitSet(initsol, len(initsol), inst, -1, best), best_of
 
-def execute(inst, alpha):
-    #create Array for initial solutions
-    initsol = []
-    #calculate number of iterations = 10% of n
-    n = inst['n']
-    #iter = int(n*0.1)
-    iter = 75
-    best = None
-    best_of = -1
-    for i in range(iter):
-        sol = cgrasp.construct(inst, alpha)
-        lsbestimp.improve(sol)
-        initsol.append(sol)
-        if sol['of'] > best_of:
-            best_of = sol['of']
-            best = sol
-
-    return calcInitSet(initsol, iter, inst, alpha, best)
-    #return initsol, best_of
 
 
+
+######################################## The algorithm to calculate a set of solutions for PR ##########################
 def calcInitSet(initsol, size, inst, alpha, best_sol):
-    #Create new instance of solutions with distances as dictionary in order to use GRASP on it
-    p = inst['p']
-    n = inst['n']
-    #initSet = {'n': size, 'p': int(n*0.05), 'd': []}
-    initSet = {'n': size, 'p': 6, 'd': []}
+    # Create new instance of solutions with distances as dictionary in order to use GRASP on it
+    # p = 3 is changeable
+    initSet = {'n': size, 'p': 3, 'd': []}
     for i in range(size):
         initSet['d'].append([0] * size)
 
@@ -142,8 +145,7 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
 
 
     ######### use grasp on new instance ##########
-
-    #graspsol = grasp.execute(initSet, size, alpha)
+    # 10 is changeable
     graspsol = grasp.execute(initSet, 10, alpha)
     worst = None
     worst_of = 0x3f3f3f
@@ -165,8 +167,5 @@ def calcInitSet(initsol, size, inst, alpha, best_sol):
     if (not best_sol_included):
         result.remove(worst)
         result.append(best_sol)
-
-    #for i in range(len(result)):
-    #    print(result[i]['sol'])
 
     return result
