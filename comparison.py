@@ -17,6 +17,7 @@ for a in algs:
 
 # split n=100 and n=500
 dfs = np.split(df, [6], axis=0)
+#dfs = np.split(df, [0], axis=0)
 
 for d in dfs:
     of = []
@@ -29,7 +30,8 @@ for d in dfs:
         dev.append(d["Dev "+a].mean())
         best.append(d["# best "+a].mean())
     data = pd.DataFrame([])
-    data["algorithm"] = algs
+    data["algorithm"] = ["GRASP", "GRASPMOD", "PR1", "PR2", "PR3", "PR4"]
+    #data["algorithm"] = ["GRASPMOD", "GRASP"]
     data["of"] = of
     data["run time (s)"] = runtime
     data["dev"] = dev
